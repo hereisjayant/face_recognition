@@ -3,7 +3,7 @@ import cv2
 
 #cascade used for the face
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_frontalface_default.xml')
-
+eye_cascade  = cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_eye.xml')
 
 cap = cv2.VideoCapture(0)
 cap.set(3,1280) # set Width
@@ -26,7 +26,14 @@ while 1:
         roi_gray = gray[y:y+h, x:x+w]
         roi_color = img[y:y+h, x:x+w]
         
-
+        eyes = eye_cascade.detectMultiScale(
+            roi_gray,
+            scaleFactor=1.5,
+            minNeighbors=10,
+            minSize=(5,5)
+            )
+        for (ex, ey, ew, eh) in eyes:#rectangles for eyes
+            cv2.rectangle(roi_color, (ex,ey), (ex+ew, ey+eh), (255,0,0), 1)
 
     cv2.imshow('Output',img)
 
@@ -36,5 +43,6 @@ while 1:
 
 cap.release()
 cv2.destroyAllWindows()
+
 
 
